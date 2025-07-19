@@ -55,6 +55,11 @@ void principal()
             statistiques(livres, nb);
             break;
 
+
+            case 3:
+            rechercherLivre(livres, nb);
+            break;
+            
             case 0:
             printf("Au revoir !\n");
             return;
@@ -66,6 +71,47 @@ void principal()
               }
                }
                   }
+
+                  void rechercherLivre(Livre livres[], int nb)
+{
+    char recherche[50];
+    int trouve = 0;
+
+    if (nb == 0)
+    {
+        printf("Aucun livre enregistre.\n");
+        return;
+    }
+
+    printf("Titre du livre a rechercher : ");
+    gets(recherche);
+
+    for (int i = 0; i < nb; i++)
+    {
+        if (strcasecmp(livres[i].titre, recherche) == 0)
+        {
+            printf("\nLivre trouve :\n");
+            printf("Titre  : %s\n", livres[i].titre);
+            printf("Auteur : %s\n", livres[i].auteur);
+            printf("Annee  : %d\n", livres[i].annee);
+            printf("ISBN   : %d\n", livres[i].isbn);
+            if (livres[i].estEmprunte == 1)
+            {
+                printf("Etat   : Emprunte\n");
+            }
+            else
+            {
+                printf("Etat   : Disponible\n");
+            }
+            trouve = 1;
+            break;
+        }
+    }
+
+    if (!trouve)
+    {
+        printf("Aucun livre ne correspond a ce titre.\n");
+    }
 
                   void statistiques(Livre livres[], int nb)
 {
@@ -82,4 +128,5 @@ void principal()
     printf("Nombre total de livres        : %d\n", nb);
     printf("Nombre de livres empruntes    : %d\n", nbEmpruntes);
     printf("Nombre de livres disponibles  : %d\n", nbDisponibles);
+
 }

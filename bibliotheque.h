@@ -12,5 +12,5 @@ typedef struct {
     char date[11];
      char date_retour[11];
 } Emprunt;
-int ajouterLivre(Livre livres[], int nb);
+int ajouterLivre(Livre , int );
 int supprimerLivre(Livre[], int);

@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include "bibliotheque.h"
 #include<string.h>

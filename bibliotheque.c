@@ -111,6 +111,7 @@ void retournerLivre(Livre livres[], int nb)
 
                 printf("Livre retourner avec succes !\n");
             }
+
             else
             {
                 printf("Ce livre n'etait pas emprunte.\n");

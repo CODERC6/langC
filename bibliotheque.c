@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "bibliotheque.h"
-#include<string.h>
+#include <string.h>
 #define MAX 100
 
 int generer_isbn()
@@ -24,6 +24,34 @@ int ajouterLivre(Livre livres[], int nb)
     getchar();
     livres[nb].estEmprunte = 0;
     return 1;
+}
+
+void afficherLivre(Livre livres[], int nb)
+{
+    if (nb == 0)
+    {
+        printf("Aucun livre enregistre pour le moment.\n");
+        return;
+    }
+
+    printf("\nListe des livres enregistres :\n\n");
+    printf("Il y a %d livre(s) enregistre(s) !!!\n", nb);
+    for (int i = 0; i < nb; i++)
+    {
+        printf("\nLivre %d\n", i + 1);
+        printf("Titre  : %s\n", livres[i].titre);
+        printf("Auteur : %s\n", livres[i].auteur);
+        printf("Annee  : %d\n",livres[i].annee);
+        printf("ISBN   : %d\n", livres[i].isbn);
+        if (livres[i].estEmprunte == 1)
+        {
+            printf("Etat   : Emprunte\n");
+        }
+        else
+        {
+            printf("Etat   : Disponible\n");
+        }
+    }
 }
 
 int supprimerLivre(Livre livres[], int nb)
@@ -78,7 +106,7 @@ void emprunterLivre(Livre livres[], Emprunt emprunts[], int nb, int* nbEmprunts)
     }
     if (trouve == 0)
     {
-        printf("Livre non disponible ou ISBN incorrect ou deja emprunter.\n");
+        printf("Livre non disponible ou ISBN incorrect ou deja emprunte.\n");
     }
 }
 
@@ -128,7 +156,7 @@ void retournerLivre(Livre livres[], int nb)
                 {
                     printf("Retour fait dans les temps. Aucune amende.\n");
                 }
-                printf("Livre retourner avec succes !\n");
+                printf("Livre retourne avec succes !\n");
             }
             else
             {
@@ -140,76 +168,6 @@ void retournerLivre(Livre livres[], int nb)
     if (!trouve)
     {
         printf("Livre non trouve.\n");
-    }
-}
-
-void menu()
-{
-    printf("\n**************** BIENVENUE DANS LE GESTIONNAIRE DE BIBLIOTHEQUE ********************\033[0m\n");
-    printf("1. Ajouter un livre\n");
-    printf("2. Afficher les livres\n");
-    printf("3. Rechercher un livre par son titre\n");
-    printf("4. Supression d'un livre par son ISBN\n");
-    printf("5. Emprunt d'un livre par son ISBN\n");
-    printf("6. Retourner le livre  emprunter par son ISBN\n");
-    printf("7. Afficher les emprunts en cours\n");
-    printf("8. Affichage des statistiques du bibliotheque\n");
-    printf("0. Quitter\n");
-    printf("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
-}
-
-void principal()
-{
-    Livre livres[MAX];
-    int nb = 0, choix;
-    Emprunt emprunts[MAX];
-    int nbEmprunts = 0;
-
-    while(1)
-    {
-        system("pause");
-        system("cls");
-        menu();
-        printf("Saisir votre choix: ");
-        scanf(" %d", &choix);
-        getchar();
-        switch(choix)
-        {
-        case 1:
-            if (ajouterLivre(livres, nb) == 1)
-            {
-                nb++;
-                printf("Le livre a ete ajoute avec succes !\n");
-            }
-            else
-            {
-                printf("La bibliotheque est pleine.\n");
-            }
-            break;
-        case 3:
-            rechercherLivre(livres, nb);
-            break;
-        case 4:
-            nb = supprimerLivre(livres, nb);
-            break;
-        case 5:
-            emprunterLivre(livres, emprunts, nb, &nbEmprunts);
-            break;
-        case 6:
-            retournerLivre(livres, nb);
-            break;
-        case 7:
-            afficherEmprunts(emprunts, nbEmprunts);
-            break;
-        case 8:
-            statistiques(livres, nb);
-            break;
-        case 0:
-            printf("Au revoir !\n");
-            return;
-        default:
-            printf("Choix invalide , veuillez reessayer.\n");
-        }
     }
 }
 
@@ -270,4 +228,77 @@ void statistiques(Livre livres[], int nb)
     printf("Nombre total de livres        : %d\n", nb);
     printf("Nombre de livres empruntes    : %d\n", nbEmpruntes);
     printf("Nombre de livres disponibles  : %d\n", nbDisponibles);
+}
+
+void menu()
+{
+    printf("\n**************** BIENVENUE DANS LE GESTIONNAIRE DE BIBLIOTHEQUE ********************\n");
+    printf("1. Ajouter un livre\n");
+    printf("2. Afficher les livres\n");
+    printf("3. Rechercher un livre par son titre\n");
+    printf("4. Supression d'un livre par son ISBN\n");
+    printf("5. Emprunt d'un livre par son ISBN\n");
+    printf("6. Retourner le livre emprunte par son ISBN\n");
+    printf("7. Afficher les emprunts en cours\n");
+    printf("8. Affichage des statistiques du bibliotheque\n");
+    printf("0. Quitter\n");
+    printf("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+}
+
+void principal()
+{
+    Livre livres[MAX];
+    int nb = 0, choix;
+    Emprunt emprunts[MAX];
+    int nbEmprunts = 0;
+
+    while(1)
+    {
+        system("pause");
+        system("cls");
+        menu();
+        printf("Saisir votre choix: ");
+        scanf(" %d", &choix);
+        getchar();
+        switch(choix)
+        {
+        case 1:
+            if (ajouterLivre(livres, nb) == 1)
+            {
+                nb++;
+                printf("Le livre a ete ajoute avec succes !\n");
+            }
+            else
+            {
+                printf("La bibliotheque est pleine.\n");
+            }
+            break;
+        case 2:
+            afficherLivre(livres, nb);
+            break;
+        case 3:
+            rechercherLivre(livres, nb);
+            break;
+        case 4:
+            nb = supprimerLivre(livres, nb);
+            break;
+        case 5:
+            emprunterLivre(livres, emprunts, nb, &nbEmprunts);
+            break;
+        case 6:
+            retournerLivre(livres, nb);
+            break;
+        case 7:
+            afficherEmprunts(emprunts, nbEmprunts);
+            break;
+        case 8:
+            statistiques(livres, nb);
+            break;
+        case 0:
+            printf("Au revoir !\n");
+            return;
+        default:
+            printf("Choix invalide, veuillez reessayer.\n");
+        }
+    }
 }

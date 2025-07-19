@@ -16,10 +16,10 @@ typedef struct {
 // Déclarations de fonctions
 void menu();
 void principal();
+void afficherLivre();
 int ajouterLivre(Livre[], int);
 int supprimerLivre(Livre[], int);
 void emprunterLivre(Livre[], Emprunt[], int, int*);
 void afficherEmprunts(Emprunt[], int);
 void retournerLivre(Livre[], int);
-void rechercherLivre(Livre[], int);
 void statistiques(Livre[], int);

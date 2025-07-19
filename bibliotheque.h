@@ -5,6 +5,21 @@ typedef struct {
     int isbn;
     int estEmprunte;
 } Livre;
-int ajouterLivre(Livre[], int);
+
+typedef struct {
+    int isbn;
+    char nom_emprunteur[100];
+    char date[11];
+    char date_retour[11];
+} Emprunt;
+
+// Déclarations de fonctions
+void menu();
 void principal();
 void afficherLivre();
+int ajouterLivre(Livre[], int);
+void emprunterLivre(Livre[], Emprunt[], int, int*);
+void afficherEmprunts(Emprunt[], int);
+void retournerLivre(Livre[], int);
+void rechercherLivre(Livre[], int);
+void statistiques(Livre[], int);

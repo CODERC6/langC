@@ -1,14 +1,15 @@
-
 #include <stdio.h>
 #include "bibliotheque.h"
 #include<string.h>
 #define MAX 100
+
 int generer_isbn()
 {
     static int isbn_courant = 10000;
     isbn_courant++;
     return isbn_courant;
 }
+
 int ajouterLivre(Livre livres[], int nb)
 {
     if (nb > MAX)
@@ -25,13 +26,13 @@ int ajouterLivre(Livre livres[], int nb)
     return 1;
 }
 
-void emprunterLivre(Livre livres[], Emprunt emprunts[], int nb, int nbEmprunts)
+void emprunterLivre(Livre livres[], Emprunt emprunts[], int nb, int* nbEmprunts)
 {
     int isbn;
     if (nb == 0)
     {
         printf("Aucun livre n'est disponible dans la bibliotheque.\n");
-        return 0;
+        return;
     }
     printf("Entrez l'ISBN du livre a emprunter : ");
     scanf("%d", &isbn);
@@ -42,14 +43,14 @@ void emprunterLivre(Livre livres[], Emprunt emprunts[], int nb, int nbEmprunts)
         if (livres[i].isbn == isbn && livres[i].estEmprunte == 0)
         {
             livres[i].estEmprunte = 1;
-            emprunts[nbEmprunts].isbn = isbn;
+            emprunts[*nbEmprunts].isbn = isbn;
             printf("Nom de l'etudiant emprunteur : ");
-            gets(emprunts[nbEmprunts].nom_emprunteur);
+            gets(emprunts[*nbEmprunts].nom_emprunteur);
             printf("Date d'emprunt (jj/mm/aaaa) : ");
-            gets(emprunts[nbEmprunts].date);
+            gets(emprunts[*nbEmprunts].date);
             printf("Date de retour prevue (jj/mm/aaaa) : ");
-            gets(emprunts[nbEmprunts].date_retour);
-            nbEmprunts++;
+            gets(emprunts[*nbEmprunts].date_retour);
+            (*nbEmprunts)++;
             trouve = 1;
             printf("Livre emprunte avec succes.\n");
             break;
@@ -102,22 +103,20 @@ void retournerLivre(Livre livres[], int nb)
                 {
                     int amende = jours_retard * 500;
                     printf("Vous devez payer une amende de %d pour %d jour(s) de retard.\n", amende, jours_retard);
-
                 }
                 else
                 {
                     printf("Retour fait dans les temps. Aucune amende.\n");
                 }
-
                 printf("Livre retourner avec succes !\n");
             }
             else
             {
                 printf("Ce livre n'etait pas emprunte.\n");
             }
+            break;
         }
     }
-
     if (!trouve)
     {
         printf("Livre non trouve.\n");
@@ -138,12 +137,14 @@ void menu()
     printf("0. Quitter\n");
     printf("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 }
+
 void principal()
 {
     Livre livres[MAX];
     int nb = 0, choix;
     Emprunt emprunts[MAX];
-    int nbEmprunts = 0, nonEmprunt = 0;
+    int nbEmprunts = 0;
+    
     while(1)
     {
         system("pause");
@@ -154,7 +155,7 @@ void principal()
         getchar();
         switch(choix)
         {
-             case 1:
+        case 1:
             if (ajouterLivre(livres, nb) == 1)
             {
                 nb++;
@@ -165,10 +166,11 @@ void principal()
                 printf("La bibliotheque est pleine.\n");
             }
             break;
-
+        case 3:
+            rechercherLivre(livres, nb);
+            break;
         case 5:
-            emprunterLivre(livres, emprunts, nb, nbEmprunts);
-            nbEmprunts++;
+            emprunterLivre(livres, emprunts, nb, &nbEmprunts);
             break;
         case 6:
             retournerLivre(livres, nb);
@@ -176,12 +178,73 @@ void principal()
         case 7:
             afficherEmprunts(emprunts, nbEmprunts);
             break;
+        case 8:
+            statistiques(livres, nb);
+            break;
         case 0:
             printf("Au revoir !\n");
             return;
-
         default:
             printf("Choix invalide , veuillez reessayer.\n");
+        }
+    }
 }
+
+void rechercherLivre(Livre livres[], int nb)
+{
+    char recherche[50];
+    int trouve = 0;
+
+    if (nb == 0)
+    {
+        printf("Aucun livre enregistre.\n");
+        return;
+    }
+
+    printf("Titre du livre a rechercher : ");
+    gets(recherche);
+
+    for (int i = 0; i < nb; i++)
+    {
+        if (strcasecmp(livres[i].titre, recherche) == 0)
+        {
+            printf("\nLivre trouve :\n");
+            printf("Titre  : %s\n", livres[i].titre);
+            printf("Auteur : %s\n", livres[i].auteur);
+            printf("Annee  : %d\n", livres[i].annee);
+            printf("ISBN   : %d\n", livres[i].isbn);
+            if (livres[i].estEmprunte == 1)
+            {
+                printf("Etat   : Emprunte\n");
+            }
+            else
+            {
+                printf("Etat   : Disponible\n");
+            }
+            trouve = 1;
+            break;
+        }
+    }
+
+    if (!trouve)
+    {
+        printf("Aucun livre ne correspond a ce titre.\n");
+    }
 }
+
+void statistiques(Livre livres[], int nb)
+{
+    int nbEmpruntes = 0;
+    int nbDisponibles = 0;
+    for (int i = 0; i < nb; i++)
+    {
+        if (livres[i].estEmprunte == 1)
+            nbEmpruntes++;
+        else
+            nbDisponibles++;
+    }
+    printf("\nStatistiques de la bibliotheque :\n");
+    printf("Nombre total de livres        : %d\n", nb);
+    printf("Nombre de livres empruntes    : %d\n", nbEmpruntes);
+    printf("Nombre de livres disponibles  : %d\n", nbDisponibles);
 }

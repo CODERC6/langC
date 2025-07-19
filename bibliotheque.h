@@ -5,5 +5,15 @@ typedef struct {
     int isbn;
     int estEmprunte;
 } Livre;
-int ajouterLivre(Livre[], int);
+typedef struct {
+    int isbn;
+    char nom_emprunteur[100];
+    char date[11];
+     char date_retour[11];
+} Emprunt;
+void menu();
 void principal();
+int ajouterLivre(Livre , int );
+void emprunterLivre();
+void afficherEmprunts(Emprunt[], int);
+void retournerLivre(Livre[], int );

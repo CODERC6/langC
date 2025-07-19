@@ -12,7 +12,7 @@ int generer_isbn()
 
 int ajouterLivre(Livre livres[], int nb)
 {
-    if (nb > MAX)
+    if (nb >= MAX)
         return 0;
     printf("Titre du livre : ");
     gets(livres[nb].titre);
@@ -24,6 +24,26 @@ int ajouterLivre(Livre livres[], int nb)
     getchar();
     livres[nb].estEmprunte = 0;
     return 1;
+}
+
+int supprimerLivre(Livre livres[], int nb)
+{
+    int isbn;
+    printf("ISBN du livre a supprimer : ");
+    scanf("%d", &isbn);
+
+    for (int i = 0; i < nb; i++) {
+        if (livres[i].isbn == isbn) {
+            // Décaler tous les éléments suivants vers la gauche
+            for (int j = i; j < nb - 1; j++) {
+                livres[j] = livres[j + 1];
+            }
+            printf("Livre supprime avec succes.\n");
+            return nb - 1; // Retourner le nouveau nombre de livres
+        }
+    }
+    printf("Livre non trouve.\n");
+    return nb;
 }
 
 void emprunterLivre(Livre livres[], Emprunt emprunts[], int nb, int* nbEmprunts)
@@ -144,7 +164,7 @@ void principal()
     int nb = 0, choix;
     Emprunt emprunts[MAX];
     int nbEmprunts = 0;
-    
+
     while(1)
     {
         system("pause");
@@ -168,6 +188,9 @@ void principal()
             break;
         case 3:
             rechercherLivre(livres, nb);
+            break;
+        case 4:
+            nb = supprimerLivre(livres, nb);
             break;
         case 5:
             emprunterLivre(livres, emprunts, nb, &nbEmprunts);

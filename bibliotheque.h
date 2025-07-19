@@ -13,9 +13,11 @@ typedef struct {
     char date_retour[11];
 } Emprunt;
 
+// Déclarations de fonctions
 void menu();
 void principal();
 int ajouterLivre(Livre[], int);
+int supprimerLivre(Livre[], int);
 void emprunterLivre(Livre[], Emprunt[], int, int*);
 void afficherEmprunts(Emprunt[], int);
 void retournerLivre(Livre[], int);

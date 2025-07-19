@@ -7,3 +7,4 @@ typedef struct {
 } Livre;
 int ajouterLivre(Livre[], int);
 void principal();
+void statistiques(Livre[], int);

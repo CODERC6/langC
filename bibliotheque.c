@@ -48,7 +48,13 @@ void principal()
             {
                 printf("La bibliotheque est pleine.\n");
             }
+
             break;
+
+            case 8:
+            statistiques(livres, nb);
+            break;
+
             case 0:
             printf("Au revoir !\n");
             return;
@@ -60,3 +66,20 @@ void principal()
               }
                }
                   }
+
+                  void statistiques(Livre livres[], int nb)
+{
+    int nbEmpruntes = 0;
+    int nbDisponibles = 0;
+    for (int i = 0; i < nb; i++)
+    {
+        if (livres[i].estEmprunte == 1)
+            nbEmpruntes++;
+        else
+            nbDisponibles++;
+    }
+    printf("\nStatistiques de la bibliotheque :\n");
+    printf("Nombre total de livres        : %d\n", nb);
+    printf("Nombre de livres empruntes    : %d\n", nbEmpruntes);
+    printf("Nombre de livres disponibles  : %d\n", nbDisponibles);
+}

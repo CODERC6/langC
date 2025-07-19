@@ -1,18 +1,17 @@
+
 #include <stdio.h>
 #include "bibliotheque.h"
-#include <string.h>
+#include<string.h>
 #define MAX 100
-
 int generer_isbn()
 {
-    static int isbn_courant = 10000;
+    static int isbn_courant = 10000; //memoriser l'état entre les appels
     isbn_courant++;
     return isbn_courant;
 }
-
 int ajouterLivre(Livre livres[], int nb)
 {
-    if (nb >= MAX)
+    if (nb > MAX)
         return 0;
     printf("Titre du livre : ");
     gets(livres[nb].titre);
@@ -25,7 +24,6 @@ int ajouterLivre(Livre livres[], int nb)
     livres[nb].estEmprunte = 0;
     return 1;
 }
-
 void afficherLivre(Livre livres[], int nb)
 {
     if (nb == 0)
@@ -35,7 +33,7 @@ void afficherLivre(Livre livres[], int nb)
     }
 
     printf("\nListe des livres enregistres :\n\n");
-    printf("Il y a %d livre(s) enregistre(s) !!!\n", nb);
+    printf("Y'a %d Enregistre !!!",nb);
     for (int i = 0; i < nb; i++)
     {
         printf("\nLivre %d\n", i + 1);
@@ -53,7 +51,47 @@ void afficherLivre(Livre livres[], int nb)
         }
     }
 }
+void rechercherLivre(Livre livres[], int nb)
+{
+    char recherche[50];
+    int trouve = 0;
 
+    if (nb == 0)
+    {
+        printf("Aucun livre enregistre.\n");
+        return;
+    }
+
+    printf("Titre du livre a rechercher : ");
+    gets(recherche);
+
+    for (int i = 0; i < nb; i++)
+    {
+        if (strcasecmp(livres[i].titre, recherche) == 0)
+        {
+            printf("\nLivre trouve :\n");
+            printf("Titre  : %s\n", livres[i].titre);
+            printf("Auteur : %s\n", livres[i].auteur);
+            printf("Annee  : %d\n", livres[i].annee);
+            printf("ISBN   : %d\n", livres[i].isbn);
+            if (livres[i].estEmprunte == 1)
+            {
+                printf("Etat   : Emprunte\n");
+            }
+            else
+            {
+                printf("Etat   : Disponible\n");
+            }
+            trouve = 1;
+            break;
+        }
+    }
+
+    if (!trouve)
+    {
+        printf("Aucun livre ne correspond a ce titre.\n");
+    }
+}
 int supprimerLivre(Livre livres[], int nb)
 {
     int isbn;
@@ -62,25 +100,22 @@ int supprimerLivre(Livre livres[], int nb)
 
     for (int i = 0; i < nb; i++) {
         if (livres[i].isbn == isbn) {
-            // Décaler tous les éléments suivants vers la gauche
-            for (int j = i; j < nb - 1; j++) {
-                livres[j] = livres[j + 1];
-            }
+            livres[i] = livres[nb-1];
+            nb--;
             printf("Livre supprime avec succes.\n");
-            return nb - 1; // Retourner le nouveau nombre de livres
+            return nb;
         }
     }
-    printf("Livre non trouve.\n");
+    printf("Livre non trouve.\n");
     return nb;
 }
-
-void emprunterLivre(Livre livres[], Emprunt emprunts[], int nb, int* nbEmprunts)
+void emprunterLivre(Livre livres[], Emprunt emprunts[], int nb, int nbEmprunts)
 {
     int isbn;
     if (nb == 0)
     {
         printf("Aucun livre n'est disponible dans la bibliotheque.\n");
-        return;
+        return 0;
     }
     printf("Entrez l'ISBN du livre a emprunter : ");
     scanf("%d", &isbn);
@@ -91,14 +126,14 @@ void emprunterLivre(Livre livres[], Emprunt emprunts[], int nb, int* nbEmprunts)
         if (livres[i].isbn == isbn && livres[i].estEmprunte == 0)
         {
             livres[i].estEmprunte = 1;
-            emprunts[*nbEmprunts].isbn = isbn;
+            emprunts[nbEmprunts].isbn = isbn;
             printf("Nom de l'etudiant emprunteur : ");
-            gets(emprunts[*nbEmprunts].nom_emprunteur);
+            gets(emprunts[nbEmprunts].nom_emprunteur);
             printf("Date d'emprunt (jj/mm/aaaa) : ");
-            gets(emprunts[*nbEmprunts].date);
+            gets(emprunts[nbEmprunts].date);
             printf("Date de retour prevue (jj/mm/aaaa) : ");
-            gets(emprunts[*nbEmprunts].date_retour);
-            (*nbEmprunts)++;
+            gets(emprunts[nbEmprunts].date_retour);
+            nbEmprunts++;
             trouve = 1;
             printf("Livre emprunte avec succes.\n");
             break;
@@ -106,7 +141,7 @@ void emprunterLivre(Livre livres[], Emprunt emprunts[], int nb, int* nbEmprunts)
     }
     if (trouve == 0)
     {
-        printf("Livre non disponible ou ISBN incorrect ou deja emprunte.\n");
+        printf("Livre non disponible ou ISBN incorrect ou deja emprunter.\n");
     }
 }
 
@@ -151,65 +186,25 @@ void retournerLivre(Livre livres[], int nb)
                 {
                     int amende = jours_retard * 500;
                     printf("Vous devez payer une amende de %d pour %d jour(s) de retard.\n", amende, jours_retard);
+
                 }
                 else
                 {
                     printf("Retour fait dans les temps. Aucune amende.\n");
                 }
-                printf("Livre retourne avec succes !\n");
+
+                printf("Livre retourner avec succes !\n");
             }
             else
             {
                 printf("Ce livre n'etait pas emprunte.\n");
             }
-            break;
         }
     }
+
     if (!trouve)
     {
         printf("Livre non trouve.\n");
-    }
-}
-
-void rechercherLivre(Livre livres[], int nb)
-{
-    char recherche[50];
-    int trouve = 0;
-
-    if (nb == 0)
-    {
-        printf("Aucun livre enregistre.\n");
-        return;
-    }
-
-    printf("Titre du livre a rechercher : ");
-    gets(recherche);
-
-    for (int i = 0; i < nb; i++)
-    {
-        if (strcasecmp(livres[i].titre, recherche) == 0)
-        {
-            printf("\nLivre trouve :\n");
-            printf("Titre  : %s\n", livres[i].titre);
-            printf("Auteur : %s\n", livres[i].auteur);
-            printf("Annee  : %d\n", livres[i].annee);
-            printf("ISBN   : %d\n", livres[i].isbn);
-            if (livres[i].estEmprunte == 1)
-            {
-                printf("Etat   : Emprunte\n");
-            }
-            else
-            {
-                printf("Etat   : Disponible\n");
-            }
-            trouve = 1;
-            break;
-        }
-    }
-
-    if (!trouve)
-    {
-        printf("Aucun livre ne correspond a ce titre.\n");
     }
 }
 
@@ -229,29 +224,26 @@ void statistiques(Livre livres[], int nb)
     printf("Nombre de livres empruntes    : %d\n", nbEmpruntes);
     printf("Nombre de livres disponibles  : %d\n", nbDisponibles);
 }
-
 void menu()
 {
-    printf("\n**************** BIENVENUE DANS LE GESTIONNAIRE DE BIBLIOTHEQUE ********************\n");
+    printf("\033[1;36m**************** BIENVENUE DANS LE GESTIONNAIRE DE BIBLIOTHEQUE ********************\033[0m\n");
     printf("1. Ajouter un livre\n");
     printf("2. Afficher les livres\n");
     printf("3. Rechercher un livre par son titre\n");
     printf("4. Supression d'un livre par son ISBN\n");
     printf("5. Emprunt d'un livre par son ISBN\n");
-    printf("6. Retourner le livre emprunte par son ISBN\n");
+    printf("6. Retourner le livre  emprunter par son ISBN\n");
     printf("7. Afficher les emprunts en cours\n");
     printf("8. Affichage des statistiques du bibliotheque\n");
     printf("0. Quitter\n");
     printf("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 }
-
 void principal()
 {
     Livre livres[MAX];
     int nb = 0, choix;
     Emprunt emprunts[MAX];
-    int nbEmprunts = 0;
-
+    int nbEmprunts = 0, nonEmprunt = 0;
     while(1)
     {
         system("pause");
@@ -259,7 +251,7 @@ void principal()
         menu();
         printf("Saisir votre choix: ");
         scanf(" %d", &choix);
-        getchar();
+        getchar(); // absorbe le \n après le choix
         switch(choix)
         {
         case 1:
@@ -280,10 +272,11 @@ void principal()
             rechercherLivre(livres, nb);
             break;
         case 4:
-            nb = supprimerLivre(livres, nb);
+           nb=supprimerLivre(livres, nb);
             break;
         case 5:
-            emprunterLivre(livres, emprunts, nb, &nbEmprunts);
+            emprunterLivre(livres, emprunts, nb, nbEmprunts);
+            nbEmprunts++;
             break;
         case 6:
             retournerLivre(livres, nb);
@@ -297,8 +290,9 @@ void principal()
         case 0:
             printf("Au revoir !\n");
             return;
+
         default:
-            printf("Choix invalide, veuillez reessayer.\n");
-        }
-    }
+            printf("Choix invalide , veuillez reessayer.\n");
+}
+}
 }

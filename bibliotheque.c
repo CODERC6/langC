@@ -49,9 +49,17 @@ void principal()
                 printf("La bibliotheque est pleine.\n");
             }
             break;
+
+             case 2:
+           afficherLivre(livres,nb);
+            break;
+
+
             case 0:
             printf("Au revoir !\n");
             return;
+
+
 
         default:
             printf("Choix invalide , veuillez reessayer.\n");
@@ -60,3 +68,32 @@ void principal()
               }
                }
                   }
+
+    void afficherLivre(Livre livres[], int nb)
+{
+    if (nb == 0)
+    {
+        printf("Aucun livre enregistre pour le moment.\n");
+        return;
+    }
+
+    printf("\nListe des livres enregistres :\n\n");
+    printf("Y'a %d Enregistre !!!",nb);
+    for (int i = 0; i < nb; i++)
+    {
+        printf("\nLivre %d\n", i + 1);
+        printf("Titre  : %s\n", livres[i].titre);
+        printf("Auteur : %s\n", livres[i].auteur);
+        printf("Annee  : %d\n",livres[i].annee);
+        printf("ISBN   : %d\n", livres[i].isbn);
+        if (livres[i].estEmprunte == 1)
+        {
+            printf("Etat   : Emprunte\n");
+        }
+        else
+        {
+            printf("Etat   : Disponible\n");
+        }
+    }
+}
+

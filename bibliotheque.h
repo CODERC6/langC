@@ -1,3 +1,4 @@
+
 typedef struct {
     char titre[50];
     char auteur[50];
@@ -5,5 +6,11 @@ typedef struct {
     int isbn;
     int estEmprunte;
 } Livre;
-int ajouterLivre(Livre[], int);
-void principal();
+typedef struct {
+    int isbn;
+    char nom_emprunteur[100];
+    char date[11];
+     char date_retour[11];
+} Emprunt;
+int ajouterLivre(Livre livres[], int nb);
+int supprimerLivre(Livre[], int);

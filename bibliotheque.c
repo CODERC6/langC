@@ -105,10 +105,10 @@ int supprimerLivre(Livre livres[], int nb)
             return nb;
         }
     }
-    printf("Livre non trouve.\n");
+    printf("Livre nonÂ trouve.\n");
     return nb;
 }
-void emprunterLivre(Livre livres[], Emprunt emprunts[], int nb, int nbEmprunts)
+int emprunterLivre(Livre livres[], Emprunt emprunts[], int nb, int nbEmprunts)
 {
     int isbn;
     if (nb == 0)
@@ -116,53 +116,70 @@ void emprunterLivre(Livre livres[], Emprunt emprunts[], int nb, int nbEmprunts)
         printf("Aucun livre n'est disponible dans la bibliotheque.\n");
         return 0;
     }
+
     printf("Entrez l'ISBN du livre a emprunter : ");
     scanf("%d", &isbn);
     getchar();
-    int trouve = 0;
+
     for (int i = 0; i < nb; i++)
     {
         if (livres[i].isbn == isbn && livres[i].estEmprunte == 0)
         {
             livres[i].estEmprunte = 1;
             emprunts[nbEmprunts].isbn = isbn;
+
             printf("Nom de l'etudiant emprunteur : ");
             gets(emprunts[nbEmprunts].nom_emprunteur);
             printf("Date d'emprunt (jj/mm/aaaa) : ");
             gets(emprunts[nbEmprunts].date);
             printf("Date de retour prevue (jj/mm/aaaa) : ");
             gets(emprunts[nbEmprunts].date_retour);
-            nbEmprunts++;
-            trouve = 1;
+
             printf("Livre emprunte avec succes.\n");
-            break;
+            return 1;
         }
     }
-    if (trouve == 0)
-    {
-        printf("Livre non disponible ou ISBN incorrect ou deja emprunter.\n");
-    }
+
+    printf("Livre non disponible ou ISBN incorrect ou deja emprunte.\n");
+    return 0;
 }
 
-void afficherEmprunts(Emprunt emprunts[], int nbEmprunts)
+
+void afficherEmprunts(Emprunt emprunts[], int nbEmprunts, Livre livres[], int nbLivres)
 {
+    int empruntsTrouves = 0;
+
     if (nbEmprunts == 0)
     {
         printf("Aucun emprunt enregistre.\n");
+        return;
     }
-    else
+
+    printf("\nListe des emprunts en cours :\n");
+
+    for (int i = 0; i < nbEmprunts; i++)
     {
-        printf("\nListe des emprunts en cours :\n");
-        for (int i = 0; i < nbEmprunts; i++)
+        for (int j = 0; j < nbLivres; j++)
         {
-            printf("Emprunt %d :\n", i + 1);
-            printf("ISBN             : %d\n", emprunts[i].isbn);
-            printf("Emprunteur       : %s\n", emprunts[i].nom_emprunteur);
-            printf("Date d'emprunt   : %s\n", emprunts[i].date);
-            printf("Date de retour   : %s\n\n", emprunts[i].date_retour);
+            if (livres[j].isbn == emprunts[i].isbn && livres[j].estEmprunte == 1)
+            {
+                printf("Emprunt %d :\n", i + 1);
+                printf("ISBN             : %d\n", emprunts[i].isbn);
+                printf("Emprunteur       : %s\n", emprunts[i].nom_emprunteur);
+                printf("Date d'emprunt   : %s\n", emprunts[i].date);
+                printf("Date de retour   : %s\n\n", emprunts[i].date_retour);
+                empruntsTrouves++;
+                break;
+            }
         }
     }
+
+    if (empruntsTrouves == 0)
+    {
+        printf("Aucun emprunt actif trouve.\n");
+    }
 }
+
 
 void retournerLivre(Livre livres[], int nb)
 {
@@ -275,15 +292,15 @@ void principal()
            nb=supprimerLivre(livres, nb);
             break;
         case 5:
-            emprunterLivre(livres, emprunts, nb, nbEmprunts);
-            nbEmprunts++;
-            break;
+          if (emprunterLivre(livres, emprunts, nb, nbEmprunts))
+          nbEmprunts++;
+           break;
         case 6:
             retournerLivre(livres, nb);
             break;
-        case 7:
-            afficherEmprunts(emprunts, nbEmprunts);
-            break;
+       case 7:
+            afficherEmprunts(emprunts, nbEmprunts, livres, nb);
+           break;
         case 8:
             statistiques(livres, nb);
             break;

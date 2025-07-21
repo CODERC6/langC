@@ -14,6 +14,6 @@ typedef struct {
 void menu();
 void principal();
 int ajouterLivre(Livre , int );
-void emprunterLivre();
-void afficherEmprunts(Emprunt[], int);
+int emprunterLivre(Livre[], Emprunt[], int, int);
+void afficherEmprunts(Emprunt emprunts[], int nbEmprunts, Livre livres[], int nbLivres);
 void retournerLivre(Livre[], int );

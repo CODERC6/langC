@@ -11,10 +11,12 @@ typedef struct {
     char date[11];
      char date_retour[11];
 } Emprunt;
+int ajouterLivre(Livre[], int);
 void menu();
 void principal();
-int ajouterLivre(Livre , int );
-
+void rechercherLivre();
+int supprimerLivre(Livre[], int);
 void emprunterLivre();
 void afficherEmprunts(Emprunt[], int);
 void retournerLivre(Livre[], int );
+void statistiques(Livre[], int);
